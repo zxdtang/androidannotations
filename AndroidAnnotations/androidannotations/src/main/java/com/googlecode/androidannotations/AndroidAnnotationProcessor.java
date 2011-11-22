@@ -29,55 +29,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
-import com.googlecode.androidannotations.annotationprocessor.AnnotatedAbstractProcessor;
-import com.googlecode.androidannotations.annotationprocessor.SupportedAnnotationClasses;
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.App;
+import com.googlecode.androidannotations.annotationprocessor.PackageScanAbstractProcessor;
+import com.googlecode.androidannotations.annotationprocessor.SupportedAnnotationPackage;
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.BeforeCreate;
-import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.EViewGroup;
-import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.FromHtml;
-import com.googlecode.androidannotations.annotations.ItemClick;
-import com.googlecode.androidannotations.annotations.ItemLongClick;
-import com.googlecode.androidannotations.annotations.ItemSelect;
-import com.googlecode.androidannotations.annotations.LongClick;
-import com.googlecode.androidannotations.annotations.OptionsItem;
-import com.googlecode.androidannotations.annotations.OptionsMenu;
-import com.googlecode.androidannotations.annotations.RoboGuice;
-import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.annotations.Touch;
-import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.res.AnimationRes;
-import com.googlecode.androidannotations.annotations.res.BooleanRes;
-import com.googlecode.androidannotations.annotations.res.ColorRes;
-import com.googlecode.androidannotations.annotations.res.ColorStateListRes;
-import com.googlecode.androidannotations.annotations.res.DimensionPixelOffsetRes;
-import com.googlecode.androidannotations.annotations.res.DimensionPixelSizeRes;
-import com.googlecode.androidannotations.annotations.res.DimensionRes;
-import com.googlecode.androidannotations.annotations.res.DrawableRes;
-import com.googlecode.androidannotations.annotations.res.HtmlRes;
-import com.googlecode.androidannotations.annotations.res.IntArrayRes;
-import com.googlecode.androidannotations.annotations.res.IntegerRes;
-import com.googlecode.androidannotations.annotations.res.LayoutRes;
-import com.googlecode.androidannotations.annotations.res.MovieRes;
-import com.googlecode.androidannotations.annotations.res.StringArrayRes;
-import com.googlecode.androidannotations.annotations.res.StringRes;
-import com.googlecode.androidannotations.annotations.res.TextArrayRes;
-import com.googlecode.androidannotations.annotations.res.TextRes;
-import com.googlecode.androidannotations.annotations.rest.Get;
-import com.googlecode.androidannotations.annotations.rest.Head;
-import com.googlecode.androidannotations.annotations.rest.Options;
-import com.googlecode.androidannotations.annotations.rest.Post;
-import com.googlecode.androidannotations.annotations.rest.Put;
-import com.googlecode.androidannotations.annotations.rest.Rest;
-import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
 import com.googlecode.androidannotations.generation.CodeModelGenerator;
 import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.AndroidManifestFinder;
@@ -154,55 +110,9 @@ import com.googlecode.androidannotations.validation.rest.PutValidator;
 import com.googlecode.androidannotations.validation.rest.RestValidator;
 import com.sun.codemodel.JCodeModel;
 
-@SupportedAnnotationClasses({ EActivity.class, //
-        App.class, //
-        BeforeCreate.class, //
-		EViewGroup.class, //
-        AfterViews.class, //
-        RoboGuice.class, //
-        ViewById.class, //
-        Click.class, //
-        LongClick.class, //
-        ItemClick.class, //
-        ItemLongClick.class, //
-        Touch.class, //
-        ItemSelect.class, //
-        UiThreadDelayed.class, //
-        UiThread.class, //
-        Transactional.class, //
-        Background.class, //
-        Extra.class, //
-        SystemService.class, //
-        SharedPref.class, //
-        Pref.class, //
-        StringRes.class, //
-        ColorRes.class, //
-        AnimationRes.class, //
-        BooleanRes.class, //
-        ColorStateListRes.class, //
-        DimensionRes.class, //
-        DimensionPixelOffsetRes.class, //
-        DimensionPixelSizeRes.class, //
-        DrawableRes.class, //
-        IntArrayRes.class, //
-        IntegerRes.class, //
-        LayoutRes.class, //
-        MovieRes.class, //
-        TextRes.class, //
-        TextArrayRes.class, //
-        StringArrayRes.class, //
-        Rest.class, //
-        Get.class, //
-        Head.class, //
-        Options.class, //
-        Post.class, //
-        Put.class,
-        FromHtml.class, //
-        OptionsMenu.class, //
-        OptionsItem.class, //
-        HtmlRes.class})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
+@SupportedAnnotationPackage("com.googlecode.androidannotations.annotations")
+public class AndroidAnnotationProcessor extends PackageScanAbstractProcessor {
 
 	/**
 	 * We do not need multiple round processing, since the generated classes do
