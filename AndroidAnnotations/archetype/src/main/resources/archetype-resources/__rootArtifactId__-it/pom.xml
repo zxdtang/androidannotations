@@ -9,7 +9,7 @@
 		<version>${version}</version>
 	</parent>
 
-	<artifactId>${artifactId}-it</artifactId>
+	<artifactId>${artifactId}</artifactId>
 	<packaging>jar</packaging>
 	<name>${artifactId} - Integration tests</name>
 

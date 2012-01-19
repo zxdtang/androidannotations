@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package ${package}.test;
+package ${package};
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -35,7 +35,7 @@ public class HelloAndroidActivityTest {
     public void setUp() throws Exception {
 		activity = new HelloAndroidActivity();
         activity.onCreate(null);
-        textView = activity.findViewById(R.id.hello);
+        textView = (TextView) activity.findViewById(R.id.hello);
     }
 
 	@Test

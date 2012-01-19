@@ -18,7 +18,7 @@
 <archetype-descriptor xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
-    name="android-release">
+    name="archetype">
 
     <requiredProperties>
         <requiredProperty key="platform">
@@ -30,6 +30,9 @@
         <requiredProperty key="android-plugin-version">
             <defaultValue>3.0.0</defaultValue>
         </requiredProperty>
+        <requiredProperty key="androidannotations-version">
+            <defaultValue>${project.version}</defaultValue>
+        </requiredProperty>        
     </requiredProperties>
 
     <fileSets>
@@ -43,7 +46,7 @@
     </fileSets>
 
     <modules>
-        <module id="${rootArtifactId}" dir="__rootArtifactId__" name="${rootArtifactId}">
+        <module id="\${rootArtifactId}" dir="__rootArtifactId__" name="\${rootArtifactId}">
             <fileSets>
                 <fileSet filtered="true" packaged="true" encoding="UTF-8">
                     <directory>src/main/java</directory>
@@ -91,24 +94,12 @@
             </fileSets>
         </module>
 
-        <module id="${rootArtifactId}-it" dir="__rootArtifactId__-it" name="${rootArtifactId}-it">
+        <module id="\${rootArtifactId}-it" dir="__rootArtifactId__-it" name="\${rootArtifactId}-it">
             <fileSets>
                 <fileSet filtered="true" packaged="true" encoding="UTF-8">
-                    <directory>src/main/java</directory>
+                    <directory>src/test/java</directory>
                     <includes>
                         <include>**/*.java</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true" encoding="UTF-8">
-                    <directory>res</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="false" encoding="UTF-8">
-                    <directory>res</directory>
-                    <includes>
-                        <include>**/*.png</include>
                     </includes>
                 </fileSet>
                 <fileSet filtered="true" encoding="UTF-8">

@@ -30,28 +30,16 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.google.android</groupId>
-				<artifactId>android-test</artifactId>
-				<version>
-                #if(${platform} == 3) 1.5_r4
-                #elseif(${platform} == 4) 1.6_r2
-                #elseif(${platform} == 7) 2.1.2
-                #{else} 2.2.1
-                #end
-                </version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
 				<groupId>com.googlecode.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
-				<version>${project.version}</version>
+				<version>${androidannotations-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.googlecode.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<classifier>api</classifier>
-				<version>>${project.version}</version>
+				<version>${androidannotations-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -142,7 +130,9 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
+	
+    #set( $aaversion = ${androidannotations-version} )
+	#if( $aaversion.contains("SNAPSHOT") )
 	<!-- Remove this if you are not using a snapshot version of AndroidAnnotations -->
 	<repositories>
 		<repository>
@@ -151,6 +141,7 @@
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
 	</repositories>
+	#end
 
 	<profiles>
 		<profile>

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package ${package}.test;
+package ${package};
 
 import java.io.File;
 
@@ -22,7 +22,9 @@ import org.junit.runners.model.InitializationError;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 public class AndroidAnnotationsTestRunner extends RobolectricTestRunner {
+	
     public AndroidAnnotationsTestRunner(Class<?> testClass) throws InitializationError {
         super(testClass, new File("../${rootArtifactId}"));
     }
+    
 }
