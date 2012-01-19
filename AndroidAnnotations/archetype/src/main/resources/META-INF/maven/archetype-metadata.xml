@@ -60,6 +60,9 @@
                         <include>**/*.xml</include>
                     </includes>
                 </fileSet>
+                <fileSet filtered="true" encoding="UTF-8">
+                    <directory>.settings</directory>
+                </fileSet>
                 <fileSet filtered="false" encoding="UTF-8">
                     <directory>res</directory>
                     <includes>
@@ -83,12 +86,7 @@
                     <directory></directory>
                     <includes>
                         <include>*.properties</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true" encoding="UTF-8">
-                    <directory>androlog</directory>
-                    <includes>
-                        <include>*.properties</include>
+                        <include>.factorypath</include>
                     </includes>
                 </fileSet>
             </fileSets>

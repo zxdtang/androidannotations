@@ -17,12 +17,11 @@ package ${package};
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import android.widget.TextView;
-import ${package}.*;
-
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import android.widget.TextView;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class HelloAndroidActivityTest {
@@ -33,7 +32,7 @@ public class HelloAndroidActivityTest {
 	
 	@Before
     public void setUp() throws Exception {
-		activity = new HelloAndroidActivity();
+		activity = new HelloAndroidActivity_();
         activity.onCreate(null);
         textView = (TextView) activity.findViewById(R.id.hello);
     }
