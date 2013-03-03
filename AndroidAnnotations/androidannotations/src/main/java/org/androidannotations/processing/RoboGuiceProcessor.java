@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -215,9 +215,9 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void afterSetContentView(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JBlock afterSetContentViewBody = holder.afterSetContentView.body();
-		afterSetContentViewBody.invoke(scope, "injectViews");
-		fireEvent(holder, eventManager, afterSetContentViewBody, holder.classes().ON_CONTENT_VIEW_AVAILABLE_EVENT);
+		JBlock onViewChanged = holder.onViewChanged().body();
+		onViewChanged.invoke(scope, "injectViews");
+		fireEvent(holder, eventManager, onViewChanged, holder.classes().ON_CONTENT_VIEW_AVAILABLE_EVENT);
 	}
 
 	private JFieldVar eventManagerField(EBeanHolder holder) {
@@ -276,7 +276,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	private void beforeCreateMethod(EBeanHolder holder, JFieldVar scope, JFieldVar eventManager, JMethod getInjector) {
 		Classes classes = holder.classes();
 
-		JBlock body = holder.init.body();
+		JBlock body = holder.initBody;
 		JVar injector = body.decl(classes.INJECTOR, "injector_", invoke(getInjector));
 		body.assign(scope, invoke(injector, "getInstance").arg(classes.CONTEXT_SCOPE.dotclass()));
 		body.invoke(scope, "enter").arg(_this());

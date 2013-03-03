@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,11 +23,13 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.model.AnnotationElements;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
@@ -54,7 +56,7 @@ public class PrefProcessor implements DecoratingElementProcessor {
 		TypeMirror fieldTypeMirror = element.asType();
 
 		String fieldType = fieldTypeMirror.toString();
-		if (fieldTypeMirror instanceof ErrorType) {
+		if (fieldTypeMirror instanceof ErrorType || fieldTypeMirror.getKind() == TypeKind.ERROR) {
 			String elementTypeName = fieldTypeMirror.toString();
 			String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - GENERATION_SUFFIX.length());
 			Set<? extends Element> sharedPrefElements = validatedModel.getRootAnnotatedElements(SharedPref.class.getName());
@@ -73,7 +75,7 @@ public class PrefProcessor implements DecoratingElementProcessor {
 
 		}
 
-		JBlock methodBody = holder.init.body();
+		JBlock methodBody = holder.initBody;
 
 		JFieldRef field = JExpr.ref(fieldName);
 

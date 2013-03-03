@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,7 +27,7 @@ import javax.lang.model.element.Element;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.SherlockHelper;
+import org.androidannotations.helper.ThirdPartyLibHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
@@ -44,13 +44,13 @@ import com.sun.codemodel.JVar;
 
 public class OptionsMenuProcessor implements DecoratingElementProcessor {
 
-	private final SherlockHelper sherlockHelper;
+	private final ThirdPartyLibHelper libHelper;
 
 	private IdAnnotationHelper annotationHelper;
 
 	public OptionsMenuProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-		sherlockHelper = new SherlockHelper(annotationHelper);
+		libHelper = new ThirdPartyLibHelper(annotationHelper);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class OptionsMenuProcessor implements DecoratingElementProcessor {
 		JClass menuClass;
 		JClass menuInflaterClass;
 		String getMenuInflaterMethodName;
-		if (sherlockHelper.usesSherlock(holder)) {
+		if (libHelper.usesActionBarSherlock(holder)) {
 			menuClass = classes.SHERLOCK_MENU;
 			menuInflaterClass = classes.SHERLOCK_MENU_INFLATER;
 			getMenuInflaterMethodName = "getSupportMenuInflater";
@@ -117,7 +117,7 @@ public class OptionsMenuProcessor implements DecoratingElementProcessor {
 			}
 
 			if (isFragment) {
-				holder.init.body().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
+				holder.initBody.invoke("setHasOptionsMenu").arg(JExpr.TRUE);
 			}
 
 			holder.onCreateOptionMenuMethodBody = body;

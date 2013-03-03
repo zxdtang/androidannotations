@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,16 +44,14 @@ public class HierarchyViewerSupportProcessor implements DecoratingElementProcess
 		holder.generateApiClass(element, ViewServer.class);
 
 		// Methods
-		afterSetContentView(codeModel, holder);
+		onViewChanged(codeModel, holder);
 		onDestroyMethod(codeModel, holder);
 		onResumeMethod(codeModel, holder);
 	}
 
-	private void afterSetContentView(JCodeModel codeModel, EBeanHolder holder) {
-		JBlock afterSetContentViewBody = holder.afterSetContentView.body();
-
+	private void onViewChanged(JCodeModel codeModel, EBeanHolder holder) {
 		JInvocation viewServerInvocation = holder.classes().VIEW_SERVER.staticInvoke("get").arg(_this());
-		afterSetContentViewBody.invoke(viewServerInvocation, "addWindow").arg(_this());
+		holder.onViewChanged().body().invoke(viewServerInvocation, "addWindow").arg(_this());
 	}
 
 	private void onDestroyMethod(JCodeModel codeModel, EBeanHolder holder) {

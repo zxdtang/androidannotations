@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -83,15 +83,13 @@ public class EViewProcessor extends GeneratingElementProcessor {
 			holder.contextRef = holder.generatedClass.field(PRIVATE, classes.CONTEXT, "context_");
 		}
 
+		JMethod init;
 		{
 			// init
-			holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
-			holder.init.body().assign((JFieldVar) holder.contextRef, JExpr.invoke("getContext"));
-		}
-
-		{
-			// afterSetContentView
-			holder.afterSetContentView = holder.generatedClass.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+			init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+			holder.initBody = init.body();
+			holder.wrapInitWithNotifier();
+			holder.initBody.assign((JFieldVar) holder.contextRef, JExpr.invoke("getContext"));
 		}
 
 		JFieldVar mAlreadyInflated_ = holder.generatedClass.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);
@@ -104,18 +102,17 @@ public class EViewProcessor extends GeneratingElementProcessor {
 		JBlock ifNotInflated = onFinishInflate.body()._if(JExpr.ref("mAlreadyInflated_").not())._then();
 		ifNotInflated.assign(mAlreadyInflated_, JExpr.TRUE);
 
-		ifNotInflated.invoke(holder.afterSetContentView);
+		holder.invokeViewChanged(ifNotInflated);
 
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
-		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, holder.generatedClass._extends(), holder, onFinishInflate);
+		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, holder.generatedClass._extends(), holder, onFinishInflate, init);
 
 		{
 			// init if activity
-			APTCodeModelHelper helper = new APTCodeModelHelper();
-			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
-			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
+			holder.initIfActivityBody = codeModelHelper.ifContextInstanceOfActivity(holder, holder.initBody);
+			holder.initActivityRef = codeModelHelper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
 
 	}

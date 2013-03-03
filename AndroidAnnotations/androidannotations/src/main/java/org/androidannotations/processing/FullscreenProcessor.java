@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,7 @@ public class FullscreenProcessor implements DecoratingElementProcessor {
 		JFieldRef fullScreen = holder.classes().WINDOW_MANAGER_LAYOUT_PARAMS.staticRef("FLAG_FULLSCREEN");
 
 		JInvocation arg = invoke(invoke("getWindow"), "setFlags").arg(fullScreen).arg(fullScreen);
-		holder.init.body().add(arg);
+		holder.initBody.add(arg);
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,7 +47,8 @@ public class EReceiverProcessor extends GeneratingElementProcessor {
 		JFieldVar contextField = holder.generatedClass.field(PRIVATE, classes.CONTEXT, "context_");
 		holder.contextRef = contextField;
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onReceive
 			JMethod onReceive = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onReceive");
@@ -56,7 +57,7 @@ public class EReceiverProcessor extends GeneratingElementProcessor {
 			onReceive.annotate(Override.class);
 			JBlock onReceiveBody = onReceive.body();
 			onReceiveBody.assign(contextField, contextParam);
-			onReceiveBody.invoke(holder.init);
+			onReceiveBody.invoke(init);
 			onReceiveBody.invoke(JExpr._super(), onReceive).arg(contextParam).arg(intentParam);
 		}
 

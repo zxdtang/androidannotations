@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,6 +31,7 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.ThirdPartyLibHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
@@ -47,9 +48,12 @@ import com.sun.codemodel.JVar;
 public class EFragmentProcessor extends GeneratingElementProcessor {
 
 	private final IdAnnotationHelper helper;
+	private ThirdPartyLibHelper holoEverywhereHelper;
 
 	public EFragmentProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		holoEverywhereHelper = new ThirdPartyLibHelper(helper);
+
 	}
 
 	@Override
@@ -62,10 +66,12 @@ public class EFragmentProcessor extends GeneratingElementProcessor {
 
 		Classes classes = holder.classes();
 
+		JMethod init;
 		{
 			// init
-			holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
-			holder.init.param(holder.classes().BUNDLE, "savedInstanceState");
+			init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+			init.param(holder.classes().BUNDLE, "savedInstanceState");
+			holder.initBody = init.body();
 		}
 
 		{
@@ -76,9 +82,13 @@ public class EFragmentProcessor extends GeneratingElementProcessor {
 			JVar onCreateSavedInstanceState = onCreate.param(classes.BUNDLE, "savedInstanceState");
 			JBlock onCreateBody = onCreate.body();
 
-			onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
+			JVar previousNotifier = holder.replacePreviousNotifier(onCreateBody);
+
+			onCreateBody.invoke(init).arg(onCreateSavedInstanceState);
 
 			onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
+
+			holder.resetPreviousNotifier(onCreateBody, previousNotifier);
 		}
 
 		holder.contextRef = invoke("getActivity");
@@ -87,15 +97,19 @@ public class EFragmentProcessor extends GeneratingElementProcessor {
 		JFieldVar contentView = holder.generatedClass.field(PRIVATE, classes.VIEW, "contentView_");
 
 		{
-			// afterSetContentView
-			holder.afterSetContentView = holder.generatedClass.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
-		}
-
-		{
 			// onCreateView()
 			JMethod onCreateView = holder.generatedClass.method(PUBLIC, classes.VIEW, "onCreateView");
 			onCreateView.annotate(Override.class);
-			JVar inflater = onCreateView.param(classes.LAYOUT_INFLATER, "inflater");
+
+			JClass inflaterClass;
+			if (holoEverywhereHelper.usesHoloEverywhere(holder)) {
+				inflaterClass = classes.HOLO_EVERYWHERE_LAYOUT_INFLATER;
+			} else {
+				inflaterClass = classes.LAYOUT_INFLATER;
+			}
+
+			JVar inflater = onCreateView.param(inflaterClass, "inflater");
+
 			JVar container = onCreateView.param(classes.VIEW_GROUP, "container");
 			JVar savedInstanceState = onCreateView.param(classes.BUNDLE, "savedInstanceState");
 
@@ -125,7 +139,7 @@ public class EFragmentProcessor extends GeneratingElementProcessor {
 
 			onViewCreatedBody.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
 
-			onViewCreatedBody.invoke(holder.afterSetContentView);
+			holder.invokeViewChanged(onViewCreatedBody);
 		}
 
 		{
@@ -144,7 +158,7 @@ public class EFragmentProcessor extends GeneratingElementProcessor {
 
 		{
 			// init if activity
-			holder.initIfActivityBody = holder.init.body();
+			holder.initIfActivityBody = holder.initBody;
 			holder.initActivityRef = holder.contextRef;
 		}
 

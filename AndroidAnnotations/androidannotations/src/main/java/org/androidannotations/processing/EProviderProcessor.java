@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,13 +42,14 @@ public class EProviderProcessor extends GeneratingElementProcessor {
 
 		holder.contextRef = invoke("getContext");
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onCreate
 			JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.BOOLEAN, "onCreate");
 			onCreate.annotate(Override.class);
 			JBlock onCreateBody = onCreate.body();
-			onCreateBody.invoke(holder.init);
+			onCreateBody.invoke(init);
 			onCreateBody._return(invoke(_super(), onCreate));
 		}
 
